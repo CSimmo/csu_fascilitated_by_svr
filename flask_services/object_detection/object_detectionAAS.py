@@ -7,18 +7,28 @@ import json
 
 import base64
 from PIL import Image
-from StringIO import StringIO
+import io
+from io import BytesIO as StringIO
 
 
 from pi_object_detection import PiObjectDetector
 
 app = Flask(__name__)
 
+
+# Take in base64 string and return cv image
+def stringToRGB(base64_string):
+    imgdata = base64.b64decode(str(base64_string))
+    image = Image.open(io.BytesIO(imgdata))
+    return cv2.cvtColor(np.array(image), cv2.COLOR_BGR2RGB)
+
+
 def readb64(base64_string):
     sbuf = StringIO()
     sbuf.write(base64.b64decode(base64_string))
     pimg = Image.open(sbuf)
     return cv2.cvtColor(np.array(pimg), cv2.COLOR_RGB2BGR)
+
 
 def encIMG64(image,convert_colour = False):
     if(convert_colour):
@@ -42,7 +52,8 @@ def DetectObjects():
             return json_data
 
         if 'image' in request.form.keys():
-            input_image = readb64(request.form["image"])
+            #input_image = readb64(request.form["image"])
+            input_image = stringToRGB(request.form["image"])
             
             detections = detector.DetectObjectsFromArray(input_image,confidence_threshold=0.5,as_dict = True)
 

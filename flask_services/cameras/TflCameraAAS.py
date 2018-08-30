@@ -7,7 +7,8 @@ import json
 
 import base64
 from PIL import Image
-from StringIO import StringIO
+#from StringIO import StringIO
+#from io import BytesIO as StringIO
 
 import urllib
 
@@ -58,7 +59,7 @@ if __name__ == "__main__":
         print("Creating service for camera with id: "+camera_id)
         print("")
     else:
-        camera_id = "02158"
+        camera_id = "08858"
     
 
     print('Starting the API')
